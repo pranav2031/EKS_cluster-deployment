@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/pranav2031/EKS_cluster-deployment.git'
+                git branch: 'main', url: 'https://github.com/pranav2031/EKS_cluster-deployment.git'
             }
         }
     

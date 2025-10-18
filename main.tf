@@ -1,9 +1,6 @@
 # -----------------------------
 # 1️⃣ Provider
 # -----------------------------
-provider "aws" {
-  region = "ap-south-1"
-}
 
 # -----------------------------
 # 2️⃣ VPC
@@ -71,57 +68,6 @@ resource "aws_route_table_association" "public_subnets" {
 # -----------------------------
 # 6️⃣ IAM Roles for EKS
 # -----------------------------
-resource "aws_iam_role" "eks_role" {
-  name = "eks-cluster-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action    = "sts:AssumeRole"
-      Effect    = "Allow"
-      Principal = { Service = "eks.amazonaws.com" }
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.eks_role.name
-}
-
-# Worker Node Role
-resource "aws_iam_role" "worker" {
-  name = "eks-worker-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Principal = { Service = "ec2.amazonaws.com" }
-      Action = "sts:AssumeRole"
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonEKSWorkerNodePolicy" {
-  role       = aws_iam_role.worker.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
-  role       = aws_iam_role.worker.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
-  role       = aws_iam_role.worker.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
 
 # -----------------------------
 # 7️⃣ EKS Cluster
